@@ -26,7 +26,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://konb-hui.github.io/blog/blog/images/avatar.webp">
 <meta property="article:published_time" content="2023-03-22T11:39:41.000Z">
-<meta property="article:modified_time" content="2023-03-22T13:54:38.278Z">
+<meta property="article:modified_time" content="2023-03-24T12:09:51.610Z">
 <meta property="article:author" content="konb">
 <meta property="article:tag" content="chatGPT">
 <meta name="twitter:card" content="summary">
@@ -174,7 +174,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        ~1.83K
+                        ~1.93K
                     
                     字
                 </li>
@@ -195,7 +195,7 @@
         <div class="kratos-post-content">
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1679493278278"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1679659791610"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             <hr />
@@ -204,14 +204,40 @@
 <li>准备一个邮箱</li>
 <li>需要代理或者VPN才能进入<a target="_blank" rel="noopener" href="https://platform.openai.com/">官网</a>注册，而且需要是chatGPT支持的国家</li>
 <li>需要一个国外的手机号，也需要是chatGPT支持的国家，可以去<a target="_blank" rel="noopener" href="https://sms-activate.org/#">这里</a>购买，也需要注册，支持支付宝，一次至少充值1美元，1美元最便宜的可以买两个号码，不过一定要先确认好chatGPT支不支持该国家</li>
-<li><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/2.png"><br>以上都准备好了，就可以直接注册了，然后此时可以直接去<a target="_blank" rel="noopener" href="https://chat.openai.com/">这里</a>体验官网的chatGPT，如果想继续创建自己的应用就往下<h3 id="2-创建api-key"><a href="#2-创建api-key" class="headerlink" title="2.创建api key"></a>2.创建api key</h3>点击<a target="_blank" rel="noopener" href="https://platform.openai.com/account/api-keys">这里</a>创建api key，如下图所示<br><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/1.png"><h2 id="二、创建应用"><a href="#二、创建应用" class="headerlink" title="二、创建应用"></a>二、创建应用</h2><h3 id="1-使用github项目"><a href="#1-使用github项目" class="headerlink" title="1.使用github项目"></a>1.使用github<a target="_blank" rel="noopener" href="https://github.com/wangrongding/wechat-bot">项目</a></h3>该项目是nodeJS，fork或者直接拉到本地都行，如果想部署在外网就fork，部署本地就拉到本地，不过都需要准备好代理地址<br>该项目默认提供了两种方式，如下图<br><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/3.png"></li>
-<li>chatgpt就是连接到chatGPT3.5，也是我们目前的目的，不过他用的不是官网的接口，也是一个GitHub的开源<a target="_blank" rel="noopener" href="https://github.com/transitive-bullshit/chatgpt-api#update-december-11-2022">项目</a>，该项目提供了两种接口，对比如下<br><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/4.png"><br>第一种是收费的，1000token/0.002美元,这种也是我们目前用的，因为注册openAI会送18美元，所以个人可以用很久了<br>第二种免费的，但是用这个项目下的代理会封号，第一个失效，第二个很慢且会被封号，亲身经历<br><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/5.png"></li>
-<li>openAI是官网提供的另一个AI模型，没有chatGPT强也挺不错了，且不需要代理，可以直接使用<h3 id="2-修改代码"><a href="#2-修改代码" class="headerlink" title="2.修改代码"></a>2.修改代码</h3>因为是调的接口，即使运行应用的机器跑了代理也不会起效，所以我们要修改请求方式，修改为如下代码就行<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> api = <span class="keyword">new</span> ChatGPTAPI(&#123;</span><br><span class="line">  <span class="attr">apiKey</span>: env.OPENAI_API_KEY,</span><br><span class="line">  <span class="attr">debug</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">fetch</span>: <span class="function">(<span class="params">url, options = &#123;&#125;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> defaultOptions = &#123;</span><br><span class="line">      <span class="attr">agent</span>: proxy(<span class="string">&quot;代理地址&quot;</span>),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> mergedOptions = &#123;</span><br><span class="line">      ...defaultOptions,</span><br><span class="line">      ...options,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> nodeFetch(url, mergedOptions);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-当然也可以使用官方提供的接口，去该<a href>地址</a>, 官方提供了三种方式，不过需要自己探索代理请求的方法<br><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/6.png"><br>为了保证chatGPT可以理解上下文进行对话，需要带上每次请求接口返回的id,代码如下所示，response是chatGPT的回复<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> res = <span class="keyword">await</span> oraPromise(</span><br><span class="line">  api.sendMessage(content, &#123;</span><br><span class="line">    <span class="attr">parentMessageId</span>: id</span><br><span class="line">  &#125;),</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">text</span>: content</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br><span class="line">map.set(name, res.id)</span><br><span class="line"><span class="keyword">const</span> response = res.detail.choices[<span class="number">0</span>].message.content</span><br></pre></td></tr></table></figure>
-<h3 id="3-修改配置"><a href="#3-修改配置" class="headerlink" title="3.修改配置"></a>3.修改配置</h3>这个参照该项目的readme文件就好<h3 id="4-部署"><a href="#4-部署" class="headerlink" title="4.部署"></a>4.部署</h3></li>
-<li>本地部署，很简单，参照作者的教程就好</li>
-<li>外网部署，这里我一定要推荐<a target="_blank" rel="noopener" href="https://railway.app/">railway</a>,该网站可以使用github登录，然后直接选择自己仓库的项目就可以一键部署，每个月会送5美元，个人使用完全足够了，没有域名的，部署完成后记得点击setting的这个地方生成一个域名，这个虽然简单，但是部署外网有风险，因为api key暴露在外网，要小心被被人薅了羊毛<br><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/7.png"><h2 id="三、备用"><a href="#三、备用" class="headerlink" title="三、备用"></a>三、备用</h2>因为微信使用程序自动回复，会有风险被封号，<strong>切记使用小号，切记使用小号，切记使用小号</strong>，且不要加太多人使用，否则容易被封，自己用应该问题不大，不过备用方案是用网站，我目前还在开发一个双服务器的网站版的系统，一个外网java服务器进行消息转发，一个nodeJS服务器在本地请求chatGPT，前端就是一个聊天框，java服务器代码已上传，<a target="_blank" rel="noopener" href="https://github.com/konb-hui/chat">点击前往</a>,后续会把nodeJS服务端代码和前端代码上传。</li>
 </ul>
+<p><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/2.png"></p>
+<p>-以上都准备好了，就可以直接注册了，然后此时可以直接去<a target="_blank" rel="noopener" href="https://chat.openai.com/">这里</a>体验官网的chatGPT，如果想继续创建自己的应用就往下</p>
+<h3 id="2-创建api-key"><a href="#2-创建api-key" class="headerlink" title="2.创建api key"></a>2.创建api key</h3><p>点击<a target="_blank" rel="noopener" href="https://platform.openai.com/account/api-keys">这里</a>创建api key，如下图所示</p>
+<p><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/1.png"></p>
+<h2 id="二、创建应用"><a href="#二、创建应用" class="headerlink" title="二、创建应用"></a>二、创建应用</h2><h3 id="1-使用github项目"><a href="#1-使用github项目" class="headerlink" title="1.使用github项目"></a>1.使用github<a target="_blank" rel="noopener" href="https://github.com/wangrongding/wechat-bot">项目</a></h3><p>该项目是nodeJS，fork或者直接拉到本地都行，如果想部署在外网就fork，部署本地就拉到本地，不过都需要准备好代理地址<br>该项目默认提供了两种方式，如下图</p>
+<p><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/3.png"></p>
+<ul>
+<li>chatgpt就是连接到chatGPT3.5，也是我们目前的目的，不过他用的不是官网的接口，也是一个GitHub的开源<a target="_blank" rel="noopener" href="https://github.com/transitive-bullshit/chatgpt-api#update-december-11-2022">项目</a>，该项目提供了两种接口，对比如下</li>
+</ul>
+<p><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/4.png"></p>
+<p>第一种是收费的，1000token/0.002美元,这种也是我们目前用的，因为注册openAI会送18美元，所以个人可以用很久了<br>第二种免费的，但是用这个项目下的代理会封号，第一个失效，第二个很慢且会被封号，亲身经历</p>
+<p><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/5.png"></p>
+<ul>
+<li>openAI是官网提供的另一个AI模型，没有chatGPT强也挺不错了，且不需要代理，可以直接使用</li>
+</ul>
+<h3 id="2-修改代码"><a href="#2-修改代码" class="headerlink" title="2.修改代码"></a>2.修改代码</h3><p>因为是调的接口，即使运行应用的机器跑了代理也不会起效，所以我们要修改请求方式，修改为如下代码就行</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> api = <span class="keyword">new</span> ChatGPTAPI(&#123;</span><br><span class="line">  <span class="attr">apiKey</span>: env.OPENAI_API_KEY,</span><br><span class="line">  <span class="attr">debug</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">fetch</span>: <span class="function">(<span class="params">url, options = &#123;&#125;</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> defaultOptions = &#123;</span><br><span class="line">      <span class="attr">agent</span>: proxy(<span class="string">&quot;代理地址&quot;</span>),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> mergedOptions = &#123;</span><br><span class="line">      ...defaultOptions,</span><br><span class="line">      ...options,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> nodeFetch(url, mergedOptions);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当然也可以使用官方提供的接口，去该<a href>地址</a>, 官方提供了三种方式，不过需要自己探索代理请求的方法</p>
+<p><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/6.png"></p>
+<p>为了保证chatGPT可以理解上下文进行对话，需要带上每次请求接口返回的id,代码如下所示，response是chatGPT的回复</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> res = <span class="keyword">await</span> oraPromise(</span><br><span class="line">  api.sendMessage(content, &#123;</span><br><span class="line">    <span class="attr">parentMessageId</span>: id</span><br><span class="line">  &#125;),</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">text</span>: content</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br><span class="line">map.set(name, res.id)</span><br><span class="line"><span class="keyword">const</span> response = res.detail.choices[<span class="number">0</span>].message.content</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-修改配置"><a href="#3-修改配置" class="headerlink" title="3.修改配置"></a>3.修改配置</h3><p>这个参照该项目的readme文件就好</p>
+<h3 id="4-部署"><a href="#4-部署" class="headerlink" title="4.部署"></a>4.部署</h3><ul>
+<li>本地部署，很简单，参照作者的教程就好</li>
+<li>外网部署，这里我一定要推荐<a target="_blank" rel="noopener" href="https://railway.app/">railway</a>,该网站可以使用github登录，然后直接选择自己仓库的项目就可以一键部署，每个月会送5美元，个人使用完全足够了，没有域名的，部署完成后记得点击setting的这个地方生成一个域名，这个虽然简单，但是部署外网有风险，因为api key暴露在外网，要小心被被人薅了羊毛</li>
+</ul>
+<p><img src="/blog/2023/03/22/chatgpt-to-wechat/chatgpt-to-wechat/7.png"></p>
+<h2 id="三、备用"><a href="#三、备用" class="headerlink" title="三、备用"></a>三、备用</h2><ol>
+<li>微信使用程序自动回复，会有风险被封号，<strong>切记使用小号，切记使用小号，切记使用小号</strong>，且不要加太多人使用，否则容易被封，自己用应该问题不大，</li>
+<li>备用方案是用网站，我目前还在开发一个双服务器的网站版的系统，一个外网java服务器进行消息转发，一个nodeJS服务器在本地请求chatGPT，前端就是一个聊天框，两个服务器通过websocket通信，这样可以让chatGPT的访问在本地，之前使用别人的web项目，不知道是因为代理地址的原因还是项目的原因，openAI账号被封了，这样是最安全的。</li>
+<li>代码<br><a target="_blank" rel="noopener" href="https://github.com/konb-hui/chat">java服务器代码</a><br><a target="_blank" rel="noopener" href="https://github.com/konb-hui/chat-admin">nodeJS服务器代码</a><br><a target="_blank" rel="noopener" href="https://github.com/konb-hui/chat-vue">前端代码</a></li>
+</ol>
 </div>
         </div>
         
@@ -303,7 +329,7 @@
                     <a class="tag-none-link" href="/blog/tags/chatGPT/" rel="tag">chatGPT</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2023-03-22T13:54:38.278Z" itemprop="dateModified">最后编辑：2023-03-22</time>
+                    <time datetime="2023-03-24T12:09:51.610Z" itemprop="dateModified">最后编辑：2023-03-24</time>
                 </div>
             </div>
         </footer>
